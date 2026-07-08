@@ -98,7 +98,7 @@ export class ViewerApp {
   }
 
   private enableNavigation(total: number): void {
-    this.rebuildHighlighter();
+    this.highlighter = new Highlighter(this.buildGeometry());
     this.scroller = new ScrollManager();
     this.navigation = new NavigationController(total);
     this.navigation.subscribe((state) => this.onNavigate(state));
@@ -122,16 +122,14 @@ export class ViewerApp {
     if (scrollIntoView) this.scroller?.scrollToRanges(ranges);
   }
 
-  private rebuildHighlighter(): void {
-    this.highlighter?.destroy();
-    this.highlighter = new Highlighter(this.buildGeometry());
-  }
-
   /** Maps page numbers to their text items and rendered text-layer spans. */
   private buildGeometry(): PageGeometryLookup {
+    const textByPage = new Map<number, PageText>();
+    for (const page of this.pageTexts) textByPage.set(page.pageNumber, page);
+
     const map = new Map<number, PageTextGeometry>();
     for (const rendered of this.pages) {
-      const pageText = this.pageTexts.find((p) => p.pageNumber === rendered.pageNumber);
+      const pageText = textByPage.get(rendered.pageNumber);
       if (!pageText) continue;
       map.set(rendered.pageNumber, { items: pageText.items, spans: rendered.spans });
     }
@@ -179,7 +177,7 @@ export class ViewerApp {
 
     this.scale = clamped;
     await this.renderPages(clamped);
-    this.rebuildHighlighter();
+    this.highlighter?.setPages(this.buildGeometry());
     this.refreshHighlight(true);
   }
 

@@ -14,8 +14,10 @@ export class Highlighter {
   private readonly supported: boolean;
   private cssHighlight: Highlight | undefined;
   private readonly overlays: HTMLElement[] = [];
+  private pages: PageGeometryLookup;
 
-  constructor(private readonly pages: PageGeometryLookup) {
+  constructor(pages: PageGeometryLookup) {
+    this.pages = pages;
     this.supported =
       typeof CSS !== 'undefined' &&
       'highlights' in CSS &&
@@ -25,6 +27,11 @@ export class Highlighter {
       this.cssHighlight = new Highlight();
       CSS.highlights.set(HIGHLIGHT_NAME, this.cssHighlight);
     }
+  }
+
+  /** Swaps in fresh page geometry (e.g. after a zoom re-render). */
+  setPages(pages: PageGeometryLookup): void {
+    this.pages = pages;
   }
 
   /** Highlights the given sentence and returns the ranges used (for scrolling). */
