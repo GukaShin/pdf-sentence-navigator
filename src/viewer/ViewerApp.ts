@@ -3,6 +3,8 @@ import { loadPdf } from '../core/pdf/PdfLoader';
 import { buildPageText } from '../core/pdf/TextExtractor';
 import { renderPage, type RenderedPage } from '../core/pdf/PageRenderer';
 import { SentenceIndex } from '../core/sentences/SentenceIndex';
+import { NavigationController, type NavigationState } from '../core/navigation/NavigationController';
+import { KeyboardHandler } from '../core/navigation/KeyboardHandler';
 import type { PageText } from '../core/types';
 import { logger } from '../core/util/logger';
 
@@ -25,6 +27,8 @@ export class ViewerApp {
   readonly pages: RenderedPage[] = [];
   readonly pageTexts: PageText[] = [];
   sentenceIndex: SentenceIndex | undefined;
+  private navigation: NavigationController | undefined;
+  private keyboard: KeyboardHandler | undefined;
 
   constructor(private readonly elements: ViewerElements) {}
 
@@ -57,8 +61,29 @@ export class ViewerApp {
     }
 
     this.sentenceIndex = SentenceIndex.build(this.pageTexts);
+    this.enableNavigation(this.sentenceIndex.count);
+  }
+
+  private enableNavigation(total: number): void {
+    this.navigation = new NavigationController(total);
+    this.navigation.subscribe((state) => this.onNavigate(state));
+    this.keyboard = new KeyboardHandler(this.navigation);
+    this.keyboard.attach();
+    this.showReady(total);
+  }
+
+  private onNavigate(state: NavigationState): void {
+    // Highlight + scroll are attached in later phases; report progress for now.
+    this.setStatus(`Sentence ${state.index + 1} of ${state.total}`);
+    logger.debug('navigate', state);
+  }
+
+  private showReady(total: number): void {
+    const pages = this.doc?.numPages ?? this.pages.length;
     this.setStatus(
-      `${this.doc.numPages} page(s), ${this.sentenceIndex.count} sentence(s) ready.`,
+      total > 0
+        ? `${pages} page(s), ${total} sentence(s). Press Tab / Shift+Tab to navigate.`
+        : `${pages} page(s). No sentences detected.`,
     );
   }
 
@@ -76,6 +101,9 @@ export class ViewerApp {
   }
 
   destroy(): void {
+    this.keyboard?.detach();
+    this.keyboard = undefined;
+    this.navigation = undefined;
     void this.doc?.destroy();
     this.doc = undefined;
     this.sentenceIndex = undefined;
