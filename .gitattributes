@@ -1,0 +1,8 @@
+# Never apply end-of-line conversion to binary assets.
+*.pdf binary
+*.png binary
+*.crx binary
+*.zip binary
+
+# Normalize line endings for text sources.
+* text=auto eol=lf
