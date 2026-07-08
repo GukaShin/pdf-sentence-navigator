@@ -18,8 +18,9 @@ import { logger } from '../core/util/logger';
 const REDIRECT_RULE_ID = 1;
 const VIEWER_PATH = 'src/viewer/viewer.html';
 
-// RE2 (used by DNR) supports inline flags; `(?i)` makes `.PDF` match too.
-const PDF_URL_REGEX = '(?i)^(?:https?|file)://.+\\.pdf(?:[?#].*)?$';
+// Chrome's DNR (RE2) rejects inline flags like `(?i)`, so case-insensitivity
+// is handled via `isUrlFilterCaseSensitive: false` on the condition instead.
+const PDF_URL_REGEX = '^(?:https?|file)://.+\\.pdf(?:[?#].*)?$';
 
 function buildRedirectRule(): chrome.declarativeNetRequest.Rule {
   const viewerUrl = chrome.runtime.getURL(VIEWER_PATH);
@@ -35,6 +36,7 @@ function buildRedirectRule(): chrome.declarativeNetRequest.Rule {
     },
     condition: {
       regexFilter: PDF_URL_REGEX,
+      isUrlFilterCaseSensitive: false,
       resourceTypes: [chrome.declarativeNetRequest.ResourceType.MAIN_FRAME],
     },
   };
@@ -51,5 +53,11 @@ export async function applyRedirectRules(enabled: boolean): Promise<void> {
     addRules,
   });
 
-  logger.info('redirect rules synced', { enabled, removed: removeRuleIds.length });
+  const active = await chrome.declarativeNetRequest.getDynamicRules();
+  logger.info('redirect rules synced', {
+    enabled,
+    removed: removeRuleIds.length,
+    active: active.length,
+    rules: active,
+  });
 }
