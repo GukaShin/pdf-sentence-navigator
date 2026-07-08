@@ -89,3 +89,18 @@ body {
   top: 0;
   height: 0;
 }
+
+/* Active sentence highlight (CSS Custom Highlight API). Text glyphs live on the
+   canvas underneath, so a translucent background keeps them readable. */
+::highlight(pdf-sentence) {
+  background-color: rgba(255, 213, 74, 0.45);
+}
+
+/* Fallback overlay for engines without the Custom Highlight API. */
+.sentence-overlay {
+  position: absolute;
+  background-color: rgba(255, 213, 74, 0.38);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 3;
+}
