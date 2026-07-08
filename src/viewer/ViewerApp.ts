@@ -2,6 +2,7 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { loadPdf } from '../core/pdf/PdfLoader';
 import { buildPageText } from '../core/pdf/TextExtractor';
 import { renderPage, type RenderedPage } from '../core/pdf/PageRenderer';
+import { SentenceIndex } from '../core/sentences/SentenceIndex';
 import type { PageText } from '../core/types';
 import { logger } from '../core/util/logger';
 
@@ -23,6 +24,7 @@ export class ViewerApp {
   private doc: PDFDocumentProxy | undefined;
   readonly pages: RenderedPage[] = [];
   readonly pageTexts: PageText[] = [];
+  sentenceIndex: SentenceIndex | undefined;
 
   constructor(private readonly elements: ViewerElements) {}
 
@@ -51,9 +53,13 @@ export class ViewerApp {
     const hasAnyText = this.pageTexts.some((p) => p.hasText);
     if (!hasAnyText) {
       this.setStatus('No selectable text found (this looks like a scanned PDF).');
-    } else {
-      this.setStatus(`${this.doc.numPages} page(s) ready.`);
+      return;
     }
+
+    this.sentenceIndex = SentenceIndex.build(this.pageTexts);
+    this.setStatus(
+      `${this.doc.numPages} page(s), ${this.sentenceIndex.count} sentence(s) ready.`,
+    );
   }
 
   /** Fit-to-width scale computed from the first page's intrinsic size. */
@@ -72,6 +78,7 @@ export class ViewerApp {
   destroy(): void {
     void this.doc?.destroy();
     this.doc = undefined;
+    this.sentenceIndex = undefined;
     this.pages.length = 0;
     this.pageTexts.length = 0;
   }
