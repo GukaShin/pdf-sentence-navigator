@@ -1,6 +1,6 @@
 {
   "name": "pdf-sentence-navigator",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Chrome MV3 extension for keyboard sentence navigation in PDFs, powered by a local PDF.js viewer.",
   "type": "module",
   "private": true,
