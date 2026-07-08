@@ -10,7 +10,8 @@
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs",
+    "test:pdf": "node scripts/generate-test-pdf.mjs"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.7.1",

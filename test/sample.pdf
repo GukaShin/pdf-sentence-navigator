@@ -1,0 +1,78 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 402 >>
+stream
+BT
+/F1 14 Tf
+72 760 Td
+18 TL
+(PDF Sentence Navigator test document.) Tj
+T* (This is the first sentence on page one. Here is a second sentence!) Tj
+T* (Does keyboard navigation work? It certainly should.) Tj
+T* (A longer sentence spans several words to verify multi-line highlighting behaves as expected across the page.) Tj
+T* (Dr. Smith paid $3.50 for item no. 4; tricky punctuation lives here.) Tj
+ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Length 287 >>
+stream
+BT
+/F1 14 Tf
+72 760 Td
+18 TL
+(Welcome to the second page of the sample file.) Tj
+T* (Press Tab to advance and Shift+Tab to go back.) Tj
+T* (The highlight should follow the active sentence and scroll it into view.) Tj
+T* (This sentence continues to the next page to test cross-page) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 222 >>
+stream
+BT
+/F1 14 Tf
+72 760 Td
+18 TL
+(boundaries and confirm the highlight maps to both pages.) Tj
+T* (Zooming with Ctrl and plus or minus must keep the highlight aligned.) Tj
+T* (This is the final sentence of the document.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R] /Count 3 >>
+endobj
+9 0 obj
+<< /Type /Catalog /Pages 8 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000000532 00000 n 
+0000000658 00000 n 
+0000000996 00000 n 
+0000001122 00000 n 
+0000001395 00000 n 
+0000001521 00000 n 
+0000001590 00000 n 
+trailer
+<< /Size 10 /Root 9 0 R >>
+startxref
+1639
+%%EOF
