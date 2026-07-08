@@ -18,6 +18,12 @@ export default defineManifest({
   // rules are all available well before this baseline.
   minimum_chrome_version: '116',
 
+  icons: {
+    '16': 'src/assets/icons/icon-16.png',
+    '48': 'src/assets/icons/icon-48.png',
+    '128': 'src/assets/icons/icon-128.png',
+  },
+
   background: {
     service_worker: 'src/background/service-worker.ts',
     type: 'module',
@@ -26,6 +32,11 @@ export default defineManifest({
   action: {
     default_popup: 'src/popup/popup.html',
     default_title: 'PDF Sentence Navigator',
+    default_icon: {
+      '16': 'src/assets/icons/icon-16.png',
+      '48': 'src/assets/icons/icon-48.png',
+      '128': 'src/assets/icons/icon-128.png',
+    },
   },
 
   // `declarativeNetRequest` redirects PDF navigations to our viewer.
