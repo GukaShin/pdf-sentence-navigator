@@ -5,6 +5,8 @@ import { renderPage, type RenderedPage } from '../core/pdf/PageRenderer';
 import { SentenceIndex } from '../core/sentences/SentenceIndex';
 import { NavigationController, type NavigationState } from '../core/navigation/NavigationController';
 import { KeyboardHandler } from '../core/navigation/KeyboardHandler';
+import { Highlighter } from '../core/highlight/Highlighter';
+import type { PageGeometryLookup, PageTextGeometry } from '../core/highlight/RangeBuilder';
 import type { PageText } from '../core/types';
 import { logger } from '../core/util/logger';
 
@@ -29,6 +31,7 @@ export class ViewerApp {
   sentenceIndex: SentenceIndex | undefined;
   private navigation: NavigationController | undefined;
   private keyboard: KeyboardHandler | undefined;
+  private highlighter: Highlighter | undefined;
 
   constructor(private readonly elements: ViewerElements) {}
 
@@ -65,6 +68,7 @@ export class ViewerApp {
   }
 
   private enableNavigation(total: number): void {
+    this.highlighter = new Highlighter(this.buildGeometry());
     this.navigation = new NavigationController(total);
     this.navigation.subscribe((state) => this.onNavigate(state));
     this.keyboard = new KeyboardHandler(this.navigation);
@@ -73,9 +77,26 @@ export class ViewerApp {
   }
 
   private onNavigate(state: NavigationState): void {
-    // Highlight + scroll are attached in later phases; report progress for now.
+    const sentence = this.sentenceIndex?.at(state.index);
+    if (sentence && this.highlighter) {
+      this.highlighter.show(sentence);
+    }
     this.setStatus(`Sentence ${state.index + 1} of ${state.total}`);
     logger.debug('navigate', state);
+  }
+
+  /** Maps page numbers to their text items and rendered text-layer spans. */
+  private buildGeometry(): PageGeometryLookup {
+    const map = new Map<number, PageTextGeometry>();
+    for (const rendered of this.pages) {
+      const pageText = this.pageTexts.find((p) => p.pageNumber === rendered.pageNumber);
+      if (!pageText) continue;
+      map.set(rendered.pageNumber, {
+        items: pageText.items,
+        spans: rendered.spans,
+      });
+    }
+    return map;
   }
 
   private showReady(total: number): void {
@@ -104,6 +125,8 @@ export class ViewerApp {
     this.keyboard?.detach();
     this.keyboard = undefined;
     this.navigation = undefined;
+    this.highlighter?.destroy();
+    this.highlighter = undefined;
     void this.doc?.destroy();
     this.doc = undefined;
     this.sentenceIndex = undefined;
