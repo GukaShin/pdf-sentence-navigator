@@ -55,18 +55,7 @@ The unpacked extension is written to `dist/`.
 
 Open any `.pdf` link, or a `file:///...pdf`, and the sentence navigator loads.
 
-## Testing
-
-Generate a sample document and follow the checklist:
-
-```bash
-npm run test:pdf        # writes test/sample.pdf
-```
-
-Then open `test/sample.pdf` in Chrome and work through
-[`docs/TESTING.md`](docs/TESTING.md).
-
-Useful scripts:
+## Scripts
 
 | Script | Description |
 | --- | --- |
@@ -74,7 +63,6 @@ Useful scripts:
 | `npm run build` | Type-check and build to `dist/` |
 | `npm run typecheck` | Type-check only |
 | `npm run icons` | Regenerate placeholder icons |
-| `npm run test:pdf` | Generate `test/sample.pdf` |
 
 ## Project structure
 
