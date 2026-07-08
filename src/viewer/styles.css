@@ -43,3 +43,49 @@ body {
   gap: 16px;
   padding: 16px;
 }
+
+/* A single rendered page: raster canvas with an overlaid text layer. */
+.page {
+  position: relative;
+  background: var(--page-bg);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.page canvas {
+  display: block;
+}
+
+/* PDF.js text layer: transparent, selectable text positioned over the canvas.
+   Rules mirror pdfjs-dist/web/pdf_viewer.css (Apache-2.0). */
+.textLayer {
+  position: absolute;
+  text-align: initial;
+  inset: 0;
+  overflow: clip;
+  opacity: 1;
+  line-height: 1;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  caret-color: CanvasText;
+  z-index: 0;
+}
+
+.textLayer :is(span, br) {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.textLayer > :not(.markedContent),
+.textLayer .markedContent span:not(.markedContent) {
+  z-index: 1;
+}
+
+.textLayer span.markedContent {
+  top: 0;
+  height: 0;
+}
