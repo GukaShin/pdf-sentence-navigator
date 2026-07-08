@@ -6,6 +6,7 @@ import { SentenceIndex } from '../core/sentences/SentenceIndex';
 import { NavigationController, type NavigationState } from '../core/navigation/NavigationController';
 import { KeyboardHandler } from '../core/navigation/KeyboardHandler';
 import { Highlighter } from '../core/highlight/Highlighter';
+import { ScrollManager } from '../core/highlight/ScrollManager';
 import type { PageGeometryLookup, PageTextGeometry } from '../core/highlight/RangeBuilder';
 import type { PageText } from '../core/types';
 import { logger } from '../core/util/logger';
@@ -32,6 +33,7 @@ export class ViewerApp {
   private navigation: NavigationController | undefined;
   private keyboard: KeyboardHandler | undefined;
   private highlighter: Highlighter | undefined;
+  private scroller: ScrollManager | undefined;
 
   constructor(private readonly elements: ViewerElements) {}
 
@@ -69,6 +71,7 @@ export class ViewerApp {
 
   private enableNavigation(total: number): void {
     this.highlighter = new Highlighter(this.buildGeometry());
+    this.scroller = new ScrollManager();
     this.navigation = new NavigationController(total);
     this.navigation.subscribe((state) => this.onNavigate(state));
     this.keyboard = new KeyboardHandler(this.navigation);
@@ -79,7 +82,8 @@ export class ViewerApp {
   private onNavigate(state: NavigationState): void {
     const sentence = this.sentenceIndex?.at(state.index);
     if (sentence && this.highlighter) {
-      this.highlighter.show(sentence);
+      const ranges = this.highlighter.show(sentence);
+      this.scroller?.scrollToRanges(ranges);
     }
     this.setStatus(`Sentence ${state.index + 1} of ${state.total}`);
     logger.debug('navigate', state);
@@ -127,6 +131,7 @@ export class ViewerApp {
     this.navigation = undefined;
     this.highlighter?.destroy();
     this.highlighter = undefined;
+    this.scroller = undefined;
     void this.doc?.destroy();
     this.doc = undefined;
     this.sentenceIndex = undefined;
