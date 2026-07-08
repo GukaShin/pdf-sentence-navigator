@@ -9,7 +9,20 @@
   <body>
     <div class="popup">
       <h1 class="popup__title">PDF Sentence Navigator</h1>
-      <p class="popup__hint" id="hint">Open a PDF, then press Tab / Shift+Tab to move between sentences.</p>
+
+      <label class="popup__row">
+        <input type="checkbox" id="toggle-enabled" />
+        <span>Open PDFs in the sentence navigator</span>
+      </label>
+
+      <p class="popup__hint">
+        <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> move between sentences.
+        <kbd>Ctrl</kbd> <kbd>+</kbd>/<kbd>-</kbd> zooms.
+      </p>
+      <p class="popup__hint popup__hint--muted">
+        To use local files, enable "Allow access to file URLs" on this
+        extension's details page.
+      </p>
     </div>
     <script type="module" src="./popup.ts"></script>
   </body>

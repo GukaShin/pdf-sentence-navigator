@@ -4,19 +4,41 @@ body {
 }
 
 .popup {
-  width: 280px;
+  width: 300px;
   padding: 14px 16px;
   color: #1d1d1f;
 }
 
 .popup__title {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   font-size: 15px;
 }
 
+.popup__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
 .popup__hint {
-  margin: 0;
+  margin: 0 0 8px;
   font-size: 12px;
   line-height: 1.5;
-  color: #5c5c60;
+  color: #3c3c43;
+}
+
+.popup__hint--muted {
+  color: #6e6e73;
+}
+
+kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  background: #f0f0f2;
+  border: 1px solid #d4d4d8;
+  border-radius: 4px;
+  padding: 1px 5px;
 }

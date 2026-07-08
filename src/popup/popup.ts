@@ -1,4 +1,14 @@
 import './popup.css';
+import { isEnabled, setEnabled } from '../core/settings';
 
-// Phase 1: static popup. Status wiring (selectable-text state, file-access
-// hint) is added in Phase 9.
+async function init(): Promise<void> {
+  const toggle = document.getElementById('toggle-enabled');
+  if (!(toggle instanceof HTMLInputElement)) return;
+
+  toggle.checked = await isEnabled();
+  toggle.addEventListener('change', () => {
+    void setEnabled(toggle.checked);
+  });
+}
+
+void init();
